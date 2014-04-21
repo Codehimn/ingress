@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+<string name="history_count">15</string>
+<boolean name="auto_altitude" value="true" />
+<boolean name="show_icon" value="true" />
+<string name="altitude">65</string>
+<string name="update_interval">30</string>
+<boolean name="spoof_wifi" value="true" />
+<string name="accuracy">1</string>
+<boolean name="simulate_moving" value="true" />
+<string name="move_distance">1</string>
+</map>
