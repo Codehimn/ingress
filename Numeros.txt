@@ -1,0 +1,26 @@
+/rssrerxrs RECRU|T[2] PASSCODE DEVlCEL[|TEMS]L[MCJD]
+Items: 1,417 - XM: 8,000
+
+R X U B M
+L1 76 1 - B 9
+L2 13 B - - -
+L3 16 10 - 2 -
+L4 16 15 - 2 -
+L5 50 96 - B -
+L6 132 211 - 170 -
+L7 11 176 - - -
+LB 19 20 - - -
+Total 3.33 53.5 - 190 9
+Shields 123 44 10
+Heat Sink 16 10 1
+Multi—hack 26 10 1
+Link Amp 40 -
+Force Amp 31
+Turret 30 -
+ADA Refactor 3
+JARVIS Virus -
+
+Keys: 0for0 distinct portals
+
+2 13:49 <5 5
+

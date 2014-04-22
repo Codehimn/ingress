@@ -1,21 +1,22 @@
-#clases
+#definiciones
+#!/usr/bin/python
 
 
 
 def enviar_cmdshell(cmdshell,var='',mostrar=1):
 	if mostrar :print(var)
-
 	cmdshell.stdin.write(var)
 	cmdshell.stdin.flush()
-
 	stdout=[]	
 	while True:
 		line = cmdshell.stdout.readline(1)
 		# print(line)
 		if '>' == line or  '#' == line: break
-			
-	# return ''.join(stdout)
 
+def posible_hack(all_portal):
+	for i in all_portal.values():
+		if i[4]:return(1)
+	return(0)
 
 def touch_x_y(cmdshell,X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_touch = 'event1'):
 	com_click = 'sendevent /dev/input/{} 3 0 {}; '.format(device_touch,X_mouse)
@@ -34,19 +35,30 @@ def touch_x_y(cmdshell,X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_tou
 	enviar_cmdshell(cmdshell,com_click +'\n' , '')
 
 
+def portal_siguiente_class(port_act,all_portal,date,Hack_time):
+	distancia_menor = 9999
+	x,y=port_act.lat,port_act.lon
+	# while 1:
+	for port_sig in all_portal:
+		port_sig = portal(port_sig)
+		distancia_temp=  abs(port_act.lat-port_sig.lat)  + abs(port_act.lon-port_sig.lon) 
+		if port_sig.hacks_restantes and (date - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
+			portal_ret=port_sig
+			distancia_menor=distancia_temp
 
-class portal_siguiente_class(object):
-	"""docstring for portal_siguiente_class"""
-	def __init__(self, var,var2,date,Hack_time):
-		super(portal_siguiente_class, self).__init__()
-		distancia_menor=99999
-		x,y=var[1],var[2]	
-		for port in var2:
-			distancia_temp=abs(float(var[1])-float(port[1])) + abs(float(var[2])-float(port[2]))
-			if var[4]>1 and date-var[3]>Hack_time and distancia_temp<distancia_menor and distancia_temp != 0:
-				self.portal=portal(port)				
-				distancia_menor=distancia_temp
-		self.distancia = round(distancia_menor * 18000,2)
+		if distancia_menor == 9999:
+			print(port_sig.hacks_restantes )
+			print(port_sig.hacks_restantes > 0)
+			print(str(distancia_temp)  + '--'+ str(distancia_menor))
+			print( distancia_temp < distancia_menor  )
+			print( (date - port_act.ultimo_hack) > Hack_time )
+
+			print(port_act.hacks_restantes and (date - port_act.ultimo_hack) > Hack_time and distancia_temp != 0)
+			print(port_act.hacks_restantes and (date - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0)
+			print( '---')
+		# exit(0)
+
+	return(portal_ret, round(distancia_menor * 0.008 , 2))
 
 class portal(object):
 	"""docstring for portal"""
@@ -56,7 +68,7 @@ class portal(object):
 		self.lat 			= int(float (var[1]) * 1000000) 
 		self.lon 			= int(float (var[2]) * 1000000) 
 		self.ultimo_hack 	= var[3]
-		self.hacks_restantes= var[4]
+		self.hacks_restantes= int(var[4])
 
 
 # Definiciones para drops

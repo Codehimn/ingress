@@ -4,13 +4,20 @@
 #include <Array.au3>
 #include <Drop ingress 2.au3>
 
+RunWait("adb kill-server", @ScriptDir, @SW_SHOW)
+If WinExists(@ScriptDir & "\adb.exe") Then WinClose(@ScriptDir & "\adb.exe")
+$pid = Run(@ScriptDir & "\adb shell", "", @SW_SHOW, $STDIN_CHILD + $STDOUT_CHILD)
+cworsend2("su")
+
+
 $minimo_items = 30
 ;~ Up_Items_bluestacks(300)
- DropItems_bluestack("R7", 1) ;1 = KEY
-Exit
+;  DropItems_bluestack("R7", 1) ;1 = KEY
+; Exit
 
 touch_x_y(31228, 31021) ;OPS
 Sleep(2000)
+
 
 RunWait("adb shell screencap -p /sdcard/screen.png", @ScriptDir, @SW_SHOW)
 RunWait("adb pull /sdcard/screen.png", @ScriptDir, @SW_SHOW)
@@ -30,20 +37,20 @@ $Items[0][2] = "U"
 $Items[0][3] = "C"
 $Items[0][4] = "M"
 
-RunWait("tesseract.exe " & " crop_page.png " & " Numeros ", @ScriptDir, @SW_HIDE)
+RunWait(@ScriptDir & "\Tesseract-ocr\tesseract.exe " & " crop_page.png " & " Numeros ", @ScriptDir, @SW_HIDE)
 $file = FileOpen(@ScriptDir & "\Numeros.txt", 0)
 
 While 1
 	Local $line = FileReadLine($file)
 	If @error = -1 Then ExitLoop
 	; MsgBox(0, "Line read:", $line)
-	If StringInStr($line, "L",1) Then ExitLoop
+	If StringInStr($line, "L1",1) Then ExitLoop
 WEnd
-
 
 
 For $i = 1 To 8
 	$temp1 = StringSplit($line, ' ')
+	_ArrayDisplay($temp1)
 	For $i2 = 2 To 6
 		$Items[$i][$i2 - 2] = $temp1[$i2]
 		If $Items[$i][$i2 - 2] > $minimo_items Then

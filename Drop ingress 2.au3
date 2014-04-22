@@ -26,33 +26,28 @@
 ; 	$str_hack = $str_hack & "busybox sleep 0.4; }" & @CRLF
 
 
-If WinExists(@ScriptDir & "\adb.exe") Then WinClose(@ScriptDir & "\adb.exe")
-$pid = Run(@ScriptDir & "\adb shell", "", @SW_SHOW, $STDIN_CHILD + $STDOUT_CHILD)
-cworsend2("su")
-
 ; DropItems_bluestack("U8", 60, 'recicle')
-DropItems_bluestack("U8", 400,'drop',1);llaves
-exit
+; DropItems_bluestack("U8", 400,'drop',1);llaves
 
 
 ; DropItems_bluestack("U8", 50)
 
 ; X10 = Shield
 
-DropItems_bluestack("X10", 50)
-DropItems_bluestack("R1", 50)
-DropItems_bluestack("R2", 10)
-DropItems_bluestack("R3", 10)
-DropItems_bluestack("R4", 10)
-DropItems_bluestack("X1", 60)
-DropItems_bluestack("X2", 60)
-DropItems_bluestack("X3", 40)
-DropItems_bluestack("X4", 40)
+; DropItems_bluestack("X10", 50)
+; DropItems_bluestack("R1", 50)
+; DropItems_bluestack("R2", 10)
+; DropItems_bluestack("R3", 10)
+; DropItems_bluestack("R4", 10)
+; DropItems_bluestack("X1", 60)
+; DropItems_bluestack("X2", 60)
+; DropItems_bluestack("X3", 40)
+; DropItems_bluestack("X4", 40)
 
-DropItems_bluestack("C1", 40)
-DropItems_bluestack("C2", 5)
-DropItems_bluestack("C3", 5)
-DropItems_bluestack("C4", 5)
+; DropItems_bluestack("C1", 40)
+; DropItems_bluestack("C2", 5)
+; DropItems_bluestack("C3", 5)
+; DropItems_bluestack("C4", 5)
 
 
 
@@ -68,7 +63,7 @@ DropItems_bluestack("C4", 5)
 ; Up_Items_bluestacks(50)
 ; reciclar_bluestacks(73)
 
-exit
+; exit
 
 
 Func DropItems_bluestack($item, $cant = 1, $accion = 'drop',$key_or_normal = 0) ;1 = KEY
