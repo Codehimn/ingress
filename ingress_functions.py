@@ -4,7 +4,7 @@
 
 
 def enviar_cmdshell(cmdshell,var='',mostrar=1):
-	if mostrar :print(var)
+	# if mostrar :print(var)
 	cmdshell.stdin.write(var)
 	cmdshell.stdin.flush()
 	stdout=[]	
@@ -13,9 +13,14 @@ def enviar_cmdshell(cmdshell,var='',mostrar=1):
 		# print(line)
 		if '>' == line or  '#' == line: break
 
-def posible_hack(all_portal):
-	for i in all_portal.values():
-		if i[4]:return(1)
+def posible_hack(all_portal,date_now):
+	for i in all_portal:
+		if i.hacks_restantes > 0:
+			# (date_now - min(port_sig.ultimo_hack for port_sig in all_portal) )
+			return(1)
+
+	print('Hackeado TODO :D')
+	exit(0)
 	return(0)
 
 def touch_x_y(cmdshell,X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_touch = 'event1'):
@@ -35,45 +40,29 @@ def touch_x_y(cmdshell,X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_tou
 	enviar_cmdshell(cmdshell,com_click +'\n' , '')
 
 
-def portal_siguiente_class(port_act,all_portal,date,Hack_time):
+def portal_siguiente_class(port_act,all_portal,date_now,Hack_time,Hack_time_burn):
 	distancia_menor = 9999
-	x,y=port_act.lat,port_act.lon
-	# while 1:
+	portal_ret=0
+	# while portal_ret==0:		
 	for port_sig in all_portal:
-		port_sig = portal(port_sig)
 		distancia_temp=  abs(port_act.lat-port_sig.lat)  + abs(port_act.lon-port_sig.lon) 
-		if port_sig.hacks_restantes and (date - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
+		if date_now - port_sig.ultimo_hack  > Hack_time_burn: port_sig.hacks_restantes  = 4
+		if port_sig.hacks_restantes > 0 and (date_now - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
 			portal_ret=port_sig
 			distancia_menor=distancia_temp
+		print (str(date_now - port_sig.ultimo_hack) + str(Hack_time))
+		print ( str(distancia_temp) + ' - ' + str(distancia_menor))
+		print ( str(port_act.lat)  + ' - ' + str(port_act.lon))
+		print ( str(port_sig.lat)  + ' - ' + str(port_sig.lon))
 
-		if distancia_menor == 9999:
-			print(port_sig.hacks_restantes )
-			print(port_sig.hacks_restantes > 0)
-			print(str(distancia_temp)  + '--'+ str(distancia_menor))
-			print( distancia_temp < distancia_menor  )
-			print( (date - port_act.ultimo_hack) > Hack_time )
-
-			print(port_act.hacks_restantes and (date - port_act.ultimo_hack) > Hack_time and distancia_temp != 0)
-			print(port_act.hacks_restantes and (date - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0)
-			print( '---')
-		# exit(0)
+	# if portal_ret==0 :
+	# 	if posible_hack(all_portal,date_now) : print('.')
 
 	return(portal_ret, round(distancia_menor * 0.008 , 2))
 
-class portal(object):
-	"""docstring for portal"""
-	def __init__(self, var):
-		super(portal, self).__init__()
-		self.nombre 		= var[0]
-		self.lat 			= int(float (var[1]) * 1000000) 
-		self.lon 			= int(float (var[2]) * 1000000) 
-		self.ultimo_hack 	= var[3]
-		self.hacks_restantes= int(var[4])
-
-
 # Definiciones para drops
 
-def DropItems_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # key = 0 = normal
+def drop_items_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # key = 0 = normal
 	XCord = 28380 + 750
 	YCord = 6575 - 5650
 
@@ -121,8 +110,7 @@ def DropItems_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # ke
 				enviar_cmdshell(cmdshell,'sleep ' + str(500 /1000) + '\n')
 				enviar_cmdshell(cmdshell,'sleep ' + str(1500 /1000) + '\n') # key client ingress
 
-
-def Up_Items_bluestacks(cant = 1):
+def up_items_bluestacks(cant = 1):
 	for i in range(cant):
 		touch_x_y(cmdshell,10355, 17635)
 		enviar_cmdshell(cmdshell,'sleep ' + str(300 /1000) + '\n')
@@ -131,7 +119,6 @@ def Up_Items_bluestacks(cant = 1):
 		# touch_x_y(cmdshell,3670, 17635)
 		touch_x_y(cmdshell,3690, 17635)
 		enviar_cmdshell(cmdshell,'sleep ' + str(2000 /1000) + '\n')
-
 
 def reciclar_bluestacks(veces, key = 0):
 	for i in range(veces):
@@ -151,7 +138,34 @@ def reciclar_bluestacks(veces, key = 0):
 			touch_x_y(cmdshell,13239, 8846) #Confirm
 			enviar_cmdshell(cmdshell,'sleep ' + str(1000 /1000) + '\n')
 
+def hackear(cmdshell, portal_actual,distancia_actual):
+	print( 'Hakeando ' + portal_actual.nombre)
+	enviar_cmdshell(cmdshell,'am startservice --ez no_history true --ei lat {} --ei long {} -n com.lexa.fakegpsdonate/.FakeGPSService ; am force-stop com.lexa.fakegpsdonate\n'.format(portal_actual.lat,portal_actual.lon))
+
+	enviar_cmdshell(cmdshell,'sleep '+ str(distancia_actual + 1 ) + '\n' )	
+	touch_x_y(cmdshell,12000,16500)#click en portal
+	enviar_cmdshell(cmdshell,'sleep 0.5\n')		
+
+	enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " ;\n')		
+	enviar_cmdshell(cmdshell,'am startservice --ez no_history true --ei lat {} --ei long {} -n com.lexa.fakegpsdonate/.FakeGPSService\n'.format(portal_actual.lat,portal_actual.lon))
+
+	for i in range(10):
+		touch_x_y(cmdshell,21560, 30440)#hack
+		enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " ;\n' , '')							
+	enviar_cmdshell(cmdshell,'am force-stop com.lexa.fakegpsdonate\n')
+	enviar_cmdshell(cmdshell,'sleep 0.5\n')
+	touch_x_y(cmdshell,32768, 5) #abajo de hack
+	enviar_cmdshell(cmdshell,'sleep 0.5\n')
+	touch_x_y(cmdshell,32768, 5) #abajo de hack
 
 
-
+class portal(object):
+	"""docstring for portal"""
+	def __init__(self, var):
+		super(portal, self).__init__()
+		self.nombre 		= var[0]
+		self.lat 			= int(float (var[1]) * 1000000) 
+		self.lon 			= int(float (var[2]) * 1000000) 
+		self.ultimo_hack 	= var[3]
+		self.hacks_restantes= int(var[4])
 
