@@ -23,6 +23,11 @@ RunWait("adb shell screencap -p /sdcard/screen.png", @ScriptDir, @SW_SHOW)
 RunWait("adb pull /sdcard/screen.png", @ScriptDir, @SW_SHOW)
 RunWait("adb shell rm /sdcard/screen.png", @ScriptDir, @SW_SHOW)
 
+
+exit
+
+
+
 $img = ObjCreate("ImageMagickObject.MagickImage.1")
 
 $ret = $img.Convert("screen.png", _  ;      "-crop", "35x98+883+83", _

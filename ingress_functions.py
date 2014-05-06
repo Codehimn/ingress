@@ -2,16 +2,33 @@
 #!/usr/bin/python
 
 
+def mock_location_disable(cmdshell,re,check_output):
+
+	enviar_cmdshell(cmdshell, "screencap -p /sdcard/ingress_imgs/screen.png\n")
+	check_output( 'adb pull /sdcard/ingress_imgs/screen.png'.split(' ') )
+		
+	respu =  str(check_output( 'ImageMagick-6.8.9-0\\convert screen.png -crop 1x1+750+700 -depth 8 txt:'.split(' ') ) )
+	matchObj=re.findall('#([A-F0-9]*?) ', respu)
+	for i in matchObj: 
+		if '282828' in str(i)  : touch_x_y(cmdshell,15800 , 24500)
+
+	respu =  str(check_output( 'ImageMagick-6.8.9-0\\convert screen.png -crop 1x1+150+650 -depth 8 txt:'.split(' ') ) )
+	matchObj=re.findall('#([A-F0-9]*?) ', respu)
+	for i in matchObj: 
+		if '1E4145' in str(i)  : touch_x_y(cmdshell,15800 , 24500)
+
+	return (str(i))
+
 
 def enviar_cmdshell(cmdshell,var='',mostrar=1):
 	# if mostrar :print(var)
 	cmdshell.stdin.write(var)
 	cmdshell.stdin.flush()
-	stdout=[]	
-	while True:
+	print('>')
+	while 1:		
 		line = cmdshell.stdout.readline(1)
-		# print(line)
-		if '>' == line or  '#' == line: break
+		if '>' == line or '$' == line or '#' == line: break
+	return(line)
 
 def posible_hack(all_portal,date_now):
 	for i in all_portal:
@@ -40,20 +57,20 @@ def touch_x_y(cmdshell,X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_tou
 	enviar_cmdshell(cmdshell,com_click +'\n' , '')
 
 
-def portal_siguiente_class(port_act,all_portal,date_now,Hack_time,Hack_time_burn):
+def portal_siguiente_class(port_act,all_portal,date_now,Hack_time,Hack_time_burn,min_lvl = 0):
 	distancia_menor = 9999
 	portal_ret=0
 	# while portal_ret==0:		
 	for port_sig in all_portal:
 		distancia_temp=  abs(port_act.lat-port_sig.lat)  + abs(port_act.lon-port_sig.lon) 
 		if date_now - port_sig.ultimo_hack  > Hack_time_burn: port_sig.hacks_restantes  = 4
-		if port_sig.hacks_restantes > 0 and (date_now - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
+		if port_sig.lvl >= min_lvl  and port_sig.hacks_restantes > 0 and (date_now - port_sig.ultimo_hack) > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
 			portal_ret=port_sig
 			distancia_menor=distancia_temp
-		print (str(date_now - port_sig.ultimo_hack) + str(Hack_time))
-		print ( str(distancia_temp) + ' - ' + str(distancia_menor))
-		print ( str(port_act.lat)  + ' - ' + str(port_act.lon))
-		print ( str(port_sig.lat)  + ' - ' + str(port_sig.lon))
+		# print (str(date_now - port_sig.ultimo_hack) + str(Hack_time))
+		# print ( str(distancia_temp) + ' - ' + str(distancia_menor))
+		# print ( str(port_act.lat)  + ' - ' + str(port_act.lon))
+		# print ( str(port_sig.lat)  + ' - ' + str(port_sig.lon))
 
 	# if portal_ret==0 :
 	# 	if posible_hack(all_portal,date_now) : print('.')
@@ -76,6 +93,8 @@ def drop_items_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # k
 	if "C" in item : YCord = YCord + (5650 * 4)
 	if "M" in item : YCord = YCord + (5650 * 5)
 
+	touch_x_y(cmdshell,31228, 31021) #OPS
+
 	for i in range(cant):
 		i_esp = i_esp + 1
 		if i_esp > 10 and accion == 'drop' :
@@ -83,18 +102,18 @@ def drop_items_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # k
 			i_esp = 0
 			cant = cant - 10
 
-		# 		touch_x_y(cmdshell,31051, 30481) ;OPS
-		touch_x_y(cmdshell,31228, 31021) #OPS
-		enviar_cmdshell(cmdshell,'sleep ' + str(600 /1000) + '\n')
-
 		touch_x_y(cmdshell,XCord, YCord) #ITEM
-		enviar_cmdshell(cmdshell,'sleep ' + str(800 /1000) + '\n')
+		enviar_cmdshell(cmdshell,'sleep ' + str(150 /1000) + '\n')
 
 		if accion == 'drop'  :
+			touch_x_y(cmdshell,31228, 31021) #OPS
+			enviar_cmdshell(cmdshell,'sleep ' + str(600 /1000) + '\n')
+
 			if key :
-				enviar_cmdshell(cmdshell,'sleep ' + str(1200 /1000) + '\n')
-				touch_x_y(cmdshell,5637, 16321)#Llave
-				enviar_cmdshell(cmdshell,'sleep ' + str(3200 /1000) + '\n')
+				touch_x_y(cmdshell,XCord, YCord) #ITEM
+				enviar_cmdshell(cmdshell,'sleep ' + str(2000 /1000) + '\n')
+				touch_x_y(cmdshell,5800, 16550)#Llave
+				enviar_cmdshell(cmdshell,'sleep ' + str(2000 /1000) + '\n')
 			else:
 				# touch_x_y(cmdshell,3343, 16820)#Otros
 				touch_x_y(cmdshell,3050,	23921)#Drop
@@ -106,9 +125,9 @@ def drop_items_bluestack(cmdshell,item, cant = 1, accion = 'drop',key = ''): # k
 				enviar_cmdshell(cmdshell,'sleep ' + str(3200 /1000) + '\n')
 			else:
 				# touch_x_y(cmdshell,3343, 16820);Otros
-				touch_x_y(cmdshell,3050,	28925)#Drop
-				enviar_cmdshell(cmdshell,'sleep ' + str(500 /1000) + '\n')
-				enviar_cmdshell(cmdshell,'sleep ' + str(1500 /1000) + '\n') # key client ingress
+				touch_x_y(cmdshell,3050,	28925)#recicle
+				enviar_cmdshell(cmdshell,'sleep ' + str(150 /1000) + '\n')
+				# enviar_cmdshell(cmdshell,'sleep ' + str(1500 /1000) + '\n') # key client ingress
 
 def up_items_bluestacks(cant = 1):
 	for i in range(cant):
@@ -120,38 +139,25 @@ def up_items_bluestacks(cant = 1):
 		touch_x_y(cmdshell,3690, 17635)
 		enviar_cmdshell(cmdshell,'sleep ' + str(2000 /1000) + '\n')
 
-def reciclar_bluestacks(veces, key = 0):
-	for i in range(veces):
-		
-		if key == 0 :
-			touch_x_y(cmdshell,25920, 12397)
-			enviar_cmdshell(cmdshell,'sleep ' + str(800 /1000) + '\n')
-			touch_x_y(cmdshell,3277, 26714)
-			enviar_cmdshell(cmdshell,'sleep ' + str(600 /1000) + '\n')
-		else:
-			touch_x_y(cmdshell,31228, 31021) #;OPS
-			enviar_cmdshell(cmdshell,'sleep ' + str(1000 /1000) + '\n')
-			touch_x_y(cmdshell,18710, 16470)#lLAVE
-			enviar_cmdshell(cmdshell,'sleep ' + str(1000 /1000) + '\n')
-			touch_x_y(cmdshell,5015, 30750) #Recycle
-			enviar_cmdshell(cmdshell,'sleep ' + str(1000 /1000) + '\n')
-			touch_x_y(cmdshell,13239, 8846) #Confirm
-			enviar_cmdshell(cmdshell,'sleep ' + str(1000 /1000) + '\n')
+def hackear(cmdshell, portal_actual,distancia_actual,re,check_output, random):
+	print( 'Hakeando {} {} {} '.format(portal_actual.nombre,portal_actual.lvl,distancia_actual))
+ 
 
-def hackear(cmdshell, portal_actual,distancia_actual):
-	print( 'Hakeando ' + portal_actual.nombre)
-	enviar_cmdshell(cmdshell,'am startservice --ez no_history true --ei lat {} --ei long {} -n com.lexa.fakegpsdonate/.FakeGPSService ; am force-stop com.lexa.fakegpsdonate\n'.format(portal_actual.lat,portal_actual.lon))
+	enviar_cmdshell(cmdshell,'am startservice --ez no_history true --ei lat {} --ei long {} -n com.lexa.fakegpsdonate/.FakeGPSService ; am force-stop com.lexa.fakegpsdonate\n'.format(portal_actual.lat + random.randrange(-50,50),portal_actual.lon + random.randrange(-50,50)))
 
 	enviar_cmdshell(cmdshell,'sleep '+ str(distancia_actual + 1 ) + '\n' )	
 	touch_x_y(cmdshell,12000,16500)#click en portal
 	enviar_cmdshell(cmdshell,'sleep 0.5\n')		
 
-	enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " ;\n')		
+	enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " \n')	
+	mock_location_disable(cmdshell,re,check_output)
+	enviar_cmdshell(cmdshell,"am start -a com.nianticproject.ingress -n com.nianticproject.ingress/.NemesisActivity\n")
+		
 	enviar_cmdshell(cmdshell,'am startservice --ez no_history true --ei lat {} --ei long {} -n com.lexa.fakegpsdonate/.FakeGPSService\n'.format(portal_actual.lat,portal_actual.lon))
 
 	for i in range(10):
 		touch_x_y(cmdshell,21560, 30440)#hack
-		enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " ;\n' , '')							
+		enviar_cmdshell(cmdshell,'sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\' " \n' , '')							
 	enviar_cmdshell(cmdshell,'am force-stop com.lexa.fakegpsdonate\n')
 	enviar_cmdshell(cmdshell,'sleep 0.5\n')
 	touch_x_y(cmdshell,32768, 5) #abajo de hack
@@ -163,9 +169,87 @@ class portal(object):
 	"""docstring for portal"""
 	def __init__(self, var):
 		super(portal, self).__init__()
-		self.nombre 		= var[0]
+		self.nombre 		= var[0]		
 		self.lat 			= int(float (var[1]) * 1000000) 
 		self.lon 			= int(float (var[2]) * 1000000) 
-		self.ultimo_hack 	= var[3]
-		self.hacks_restantes= int(var[4])
+		self.lvl 			= int(var[3])
+		self.deployds	 	= int(var[4])
+		self.ultimo_hack 	= var[5]
+		self.hacks_restantes= int(var[6])
 
+def limpieza_inventario(cmdshell,check_output):
+
+	touch_x_y(cmdshell,32768, 5) #abajo de hack
+	enviar_cmdshell(cmdshell,'sleep ' + str(500 /1000) + '\n')
+	touch_x_y(cmdshell,31228, 31021) #OPS
+	enviar_cmdshell(cmdshell,'sleep 1\n')
+
+	check_output( 'adb shell screencap -p /sdcard/screen.png'.split(' ') )
+	check_output( 'adb pull /sdcard/screen.png'.split(' ') )
+	check_output( 'adb shell rm /sdcard/screen.png'.split(' ') )
+	check_output( 'ImageMagick-6.8.9-0\\Convert screen.png -brightness-contrast 10,80 -rotate -90 -fuzz 0% -fill rgb(0,0,0) -opaque rgb(0,255,255) -fill rgb(255,255,255) -opaque rgb(255,0,0) crop_page.png'.split(' ') )
+
+	check_output( 'Tesseract-ocr\\tesseract.exe crop_page.png screen_to_txt nobatch Lnumeros' )
+
+	f = open("screen_to_txt.txt",'r')
+	out = f.readlines() # will append in the list out
+	f.close()
+
+	itm_type = [[1,1,0], [1,2,0], [1,3,200], [1,4,300],[1,5,200],[2,1,0], [2,2,0], [2,3,100], [2,10,0], [4,1,0],[4,2,0],[5,1,0],[5,2,0]]
+
+ 	# itm_type = [x for i in itm_type: i.replace('R',1)  ]
+	# itm_type = [x for i in itm_type]
+ 	# itm_type = [i.replace('X', 2) for i in itm_type] 
+ 	# itm_type = [i.replace('U', 3) for i in itm_type] 
+ 	# itm_type = [i.replace('C', 4) for i in itm_type] 
+ 	# itm_type = [i.replace('M', 5) for i in itm_type] 
+
+
+	muchos_items=0	
+	for line in out:  
+		line=line.replace('-','0') 			
+		if 'tems' in line and 'XM' in line:	
+			print(line)	
+			line = line.replace(': ',' ')
+			line = line.replace(':',' ')
+			line = line.replace(',','')
+
+			if int(line.split(' ')[1] ) > 1500: #si tiene mas de X items
+				muchos_items=1
+
+		itm_type_spl = line.split(' ')
+		if muchos_items==1 and len(itm_type_spl) == 6:
+			for itm in itm_type:	
+				if 'L{} '.format(itm[1]) == line[0:3]:
+					cant= int(itm_type_spl[ itm[0] ] )
+					min_cant = itm[2]					
+					if cant > min_cant:  
+						cant -= min_cant
+					else:
+						cant = int( cant * 0.8 ) # un 80%
+					print(str(itm) + 'cant:' + str(cant) )
+
+					if itm[0] == 1 :itm[0] = 'R' + str(itm[1])
+					if itm[0] == 2 :itm[0] = 'X' + str(itm[1])
+					if itm[0] == 3 :itm[0] = 'U' + str(itm[1])
+					if itm[0] == 4 :itm[0] = 'C' + str(itm[1])
+					if itm[0] == 5 :itm[0] = 'M' + str(itm[1])
+
+					drop_items_bluestack(cmdshell, itm[0] , cant, accion = 'recicle',key = '')
+
+	enviar_cmdshell(cmdshell,"am start -a com.nianticproject.ingress -n com.nianticproject.ingress/.NemesisActivity\n")
+	
+
+	# drop_items_bluestack(cmdshell,'X5', 70, accion = 'drop',key = '')
+	# drop_items_bluestack(cmdshell,'X4', 210, accion = 'drop',key = '')
+	# drop_items_bluestack(cmdshell,'U8', 100, accion = 'recicle',key = 1)
+
+	# drop_items_bluestack(cmdshell,'X1', 100, accion = 'recicle',key = '')
+	# drop_items_bluestack(cmdshell,'X2', 100, accion = 'recicle',key = '')		
+	# drop_items_bluestack(cmdshell,'X3', 50, accion = 'recicle',key = '')
+	# drop_items_bluestack(cmdshell,'C1', 100, accion = 'recicle',key = '')
+	# drop_items_bluestack(cmdshell,'R1', 100, accion = 'recicle',key = '')
+	# drop_items_bluestack(cmdshell,'R2', 100, accion = 'recicle',key = '')	
+	# drop_items_bluestack(cmdshell,'R3', 50, accion = 'recicle',key = '')	
+	# drop_items_bluestack(cmdshell,'X10', 100, accion = 'recicle',key = '')
+	# 
