@@ -7,7 +7,7 @@ from time import sleep
 # driver = ChromeDriver(options)
 options = webdriver.ChromeOptions()
 options.add_argument("--user-data-dir=C:\\Users\\Codehimn\\AppData\\Local\\Google\\Chrome\\User Data\\selenium")
-options.add_argument("--start-minimized")
+options.add_argument("--start-maximized")
 
 chromedriver = "C:\\Users\\Codehimn\\Dropbox\\ingress\\selenium-2.41.0\\chromedriver"
 os.environ["webdriver.chrome.driver"] = chromedriver
