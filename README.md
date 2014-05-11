@@ -9,3 +9,8 @@ Pasos:
 3- instalar ingress en el Bluestacks y loquearse con una cuenta de google.
 
 4- 
+
+
+
+
+http://youtu.be/ABzK4fEDtDM
