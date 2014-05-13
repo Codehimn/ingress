@@ -95,7 +95,7 @@ def touch_x_y(X_mouse, Y_mouse, X_mouse2 = '', Y_mouse2 = '',device_touch = 'eve
 	enviar_cmdshell(com_click +'\n' , '')
 
 
-def portal_siguiente_class(port_act,date_now = datetime.now(),Hack_time = Hack_time - timedelta(seconds=10) ,Hack_time_burn = Hack_time_burn,min_lvl = 0):
+def portal_siguiente_class(port_act,date_now = datetime.now(),Hack_time = Hack_time - timedelta(seconds=10) ,Hack_time_burn = Hack_time_burn,min_lvl = 0,solo_print=0):
 	distancia_menor = 9999
 	portal_ret=0
 	# while portal_ret==0:	
@@ -109,11 +109,15 @@ def portal_siguiente_class(port_act,date_now = datetime.now(),Hack_time = Hack_t
 
 		if dif_date > Hack_time_burn:
 			sql.execute('update portals set hacks_restantes = 4 where lat = {} and lon = {} '.format( port_sig['lat'] ,port_sig['lon']) )
-			db.commit() #Commit the change
+			if solo_print == 0: db.commit() #Commit the change
 
 		if port_sig['lvl'] >= min_lvl  and port_sig['hacks_restantes'] > 0 and dif_date > Hack_time and distancia_temp < distancia_menor and distancia_temp != 0 :
 			portal_ret=port_sig
 			distancia_menor=distancia_temp
+
+	# print("hackear( {'lat' : {} ,'lon' : {} }, 0)".format(port_sig['lat'] , port_sig['lon']))
+	# print("hackear( {'nombre' : "+str(portal_ret['nombre'])+", 'lat' : "+str(portal_ret['lat'])+" ,'lon' : "+str(portal_ret['lon'])+" }, 0)" )
+	print('am start -a com.nianticproject.ingress -n com.nianticproject.ingress/cm.nianticproject.ingress.NemesisActivity;am startservice --ez no_history true --ei lat '+str(portal_ret['lat'])+' --ei long '+str(portal_ret['lon'])+' -n com.lexa.fakegpsdonate/.FakeGPSService ;sleep 0.2; sqlite3 /data/data/com.android.providers.settings/databases/settings.db "update secure set value=0 where name=\'mock_location\'" ; am force-stop com.lexa.fakegpsdonate ;casa Gabor' ) 
 
 	return(portal_ret, round(distancia_menor * 0.008 , 2))
 
@@ -220,6 +224,7 @@ class portal(object):
 
 def limpieza_inventario():
 
+	enviar_cmdshell("am start -a com.nianticproject.ingress -n com.nianticproject.ingress/.NemesisActivity\n")
 	touch_x_y(32768, 5) #abajo de hack
 	enviar_cmdshell('sleep ' + str(500 /1000) + '\n')
 	touch_x_y(31228, 31021) #OPS
@@ -228,9 +233,12 @@ def limpieza_inventario():
 	check_output( 'adb shell screencap -p /sdcard/screen.png'.split(' ') )
 	check_output( 'adb pull /sdcard/screen.png'.split(' ') )
 	check_output( 'adb shell rm /sdcard/screen.png'.split(' ') )
-	check_output( 'ImageMagick-6.8.9-0\\Convert screen.png -brightness-contrast 10,60 -rotate -90 -fuzz 0% -fill rgb(0,0,0) -opaque rgb(0,255,255) -fill rgb(255,255,255) -opaque rgb(255,0,0) crop_page.png'.split(' ') )
+	# check_output( 'ImageMagick-6.8.9-0\\Convert screen.png -depth 3 -rotate -90 -shave 0x70 -threshold 10% crop_page.jpg'.split(' ') )
 
-	check_output( 'Tesseract-ocr\\tesseract.exe crop_page.png screen_to_txt nobatch Lnumeros' )
+	# check_output( 'ImageMagick-6.8.9-0\\Convert screen.png -brightness-contrast 30,30 -depth 1 -rotate -90 -shave 0x70 -fuzz 0% -fill rgb(0,0,0) -opaque rgb(0,255,255) -fill rgb(255,255,255) -threshold 10% crop_page.jpg'.split(' ') )
+	check_output( 'ImageMagick-6.8.9-0\\Convert screen.png -brightness-contrast 10,60 -rotate -90 -fuzz 0% -fill rgb(0,0,0) -opaque rgb(0,255,255) -fill rgb(255,255,255) -opaque rgb(255,0,0) crop_page.jpg'.split(' ') )
+# -normalize
+	check_output( 'Tesseract-ocr\\tesseract.exe crop_page.jpg screen_to_txt -psm 6 nobatch Lnumeros' )
 
 	f = open("screen_to_txt.txt",'r')
 	out = f.readlines() # will append in the list out
@@ -368,6 +376,9 @@ def read_portal_file():
 	print('portales_db creado')
 
 
+def Ubicacion_ok():
+	#oto , ver si se puede hackear
+	return(c,conn)
 
 try:	sql
 except NameError:	sql,db = connect_db()

@@ -1,9 +1,10 @@
+import os
 
 from ingress_functions import *
 
 # limpieza_inventario(check_output)
 # import browser #recargar los portales
-read_portal_file()
+# read_portal_file()
 
 distancia_actual = 0
 enviar_cmdshell('sleep 2.5\n')	
