@@ -14,3 +14,7 @@ Pasos:
 
 
 http://youtu.be/ABzK4fEDtDM
+
+
+primer test de solucion de glyphos falla 1 de 5
+https://www.youtube.com/watch?v=gxr1-yBypgw&feature=youtu.be
