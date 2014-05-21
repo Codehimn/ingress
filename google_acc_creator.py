@@ -1,6 +1,7 @@
 import os
 from selenium import webdriver
 from time import sleep
+import urllib
 
 # options = ChromeOptions()
 # options.AddArgument("--user-data-dir=C:\\Users\\Codehimn\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
@@ -13,27 +14,43 @@ chromedriver = "C:\\Users\\Codehimn\\Dropbox\\ingress\\selenium-2.41.0\\chromedr
 os.environ["webdriver.chrome.driver"] = chromedriver
 browser = webdriver.Chrome(chromedriver, chrome_options=options)
 
+
 browser.get('https://accounts.google.com/signup')
+# sleep(20)
 
 browser.find_element_by_xpath('//*[@id="FirstName"]').send_keys('Juan')
 browser.find_element_by_xpath('//*[@id="LastName"]').send_keys('Perez')
 
-browser.find_element_by_xpath('//*[@id="GmailAddress"]').send_keys('ingress.acc10')
+browser.find_element_by_xpath('//*[@id="GmailAddress"]').send_keys('ingress.acc14')
 browser.find_element_by_xpath('//*[@id="Passwd"]').send_keys('iluminadopalma')
 browser.find_element_by_xpath('//*[@id="PasswdAgain"]').send_keys('iluminadopalma')
 
 browser.find_element_by_xpath('//*[@id="BirthDay"]').send_keys('01')
+
+browser.find_element_by_xpath('//*[@id="BirthYear"]').send_keys('1987')
+browser.find_element_by_xpath('//*[@id="RecoveryEmailAddress"]').send_keys("codehimn@gmail.com");
+
+browser.find_element_by_xpath('//*[@id="SkipCaptcha"]').click();
+browser.find_element_by_xpath('//*[@id="TermsOfService"]').click();
+
+
+# browser.find_element_by_xpath('//*[@id="BirthMonth"]/option[2]').click();
+# browser.find_element_by_xpath('//*[@id="Gender"]/option[3]').click();
+
 browser.find_element_by_xpath('//*[@id="BirthMonth"]/div/div[1]').click();
 browser.find_element_by_xpath('//*[@id=":0"]/div').click();
-browser.find_element_by_xpath('//*[@id="BirthYear"]').send_keys('1984')
 
 browser.find_element_by_xpath('//*[@id="Gender"]/div/div[1]').click();
 browser.find_element_by_xpath('//*[@id=":d"]').click();
 
-browser.find_element_by_xpath('//*[@id="RecoveryEmailAddress"]').send_keys("codehimn@gmail.com");
 
-browser.find_element_by_xpath('//*[@id="TermsOfService"]').click();
-browser.find_element_by_xpath('//*[@id="recaptcha_response_field"]').click();
+browser.find_element_by_xpath('//*[@id="submitbutton"]').click();
+
+
+
+# src= browser.find_element_by_xpath('//*[@id="recaptcha_challenge_image"]').get_attribute('src')
+# urllib.urlretrieve(src, "captcha.png")
+# browser.find_element_by_xpath('//*[@id="recaptcha_response_field"]').click();
 
 sleep(5)
 i=0
@@ -62,3 +79,5 @@ fuente = str ( browser.page_source )
 # String imgmsg = driver.findElements(By.xpath("//div[@id='recaptcha_image']
 #                  /img")).toString();
 # System.out.println(imgmsg);
+
+

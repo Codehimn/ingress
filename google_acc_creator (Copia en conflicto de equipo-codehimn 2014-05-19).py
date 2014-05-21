@@ -1,17 +1,17 @@
 
 if accion=='a_enlaza_depto_sp':
 
-	Madisa=MadisaNet()
+	madisa=MadisaNet()
 
-	cod_fam = Madisa.DirMadisaNet
+	cod_fam = Madisa.dir_madisanet
 
-	error(cl,'No existe registro '  + str(cod_fam))
+	# error(cl,'No existe registro '  + str(cod_fam))
 
 
 	#prog_dir = str ( os.environ['ProgramFiles'] )
 	prog_dir  =  'C:\\Program Files'	
-	madicustno = '99999'
-	compno = '1'
+	madicustno = madisa.madicustno
+	compno = madisa.compno
 	
 	fams=selec(gpx,'familias',['0'])
 	nt = len(fams)
@@ -31,7 +31,7 @@ if accion=='a_enlaza_depto_sp':
 			datos = datos + '1|0||||0||||0|0||||0|1||'
 
 			try:
-				f = open(prog_dir + '\\MADISA\\MadisaNet\\department.txt','a')
+				f = open(madisa.dir_import + 'department.txt','a')
 				f.write(datos + '\n')
 				f.flush()
 				f.close()
@@ -41,5 +41,5 @@ if accion=='a_enlaza_depto_sp':
 		else:
 			error(cl,'No existe registro '  + str(cod_fam))
 
-	shutil.move(prog_dir + '\\MADISA\\MadisaNet\\department.txt', prog_dir + '\\MADISA\\MadisaNet\\import\\')
+	shutil.move(madisa.dir_import + 'department.txt', madisa.dir_import)
 	envia(cl,'OK')

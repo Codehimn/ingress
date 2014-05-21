@@ -1,29 +1,28 @@
 import os
+os.system('taskkill /f /im adb.exe')
 
 from ingress_functions import *
 
+enviar_cmdshell("am start -a com.nianticproject.ingress -n com.nianticproject.ingress/com.nianticproject.ingress.NemesisActivity\n")
+
 limpieza_inventario()
+
 # exit(0)
 # import browser #recargar los portales
-read_portal_file()
+# read_portal_file()
 # exit(0)
 
 distancia_actual = 0
 enviar_cmdshell('sleep 2.5\n')	
 
-# 39.583265
-# 2.657453
-
 portal_actual	= select_first_portal()
 print(portal_actual)
 
 Hacks_efectuados=0
-while 1:
-
-	hackear( portal_actual, distancia_actual)
-
+for x in range (300):
+	hackear( portal_actual, distancia_actual,opcion =2)
 	Hacks_efectuados+=1
-	if Hacks_efectuados > 10 :
+	if Hacks_efectuados > 15 :
 		Hacks_efectuados = 0
 		limpieza_inventario()
 
