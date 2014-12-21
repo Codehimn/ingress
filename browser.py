@@ -1,6 +1,10 @@
 import os
 from selenium import webdriver
 from time import sleep
+from ingress_functions import *
+
+read_portal_file()
+exit(0)
 
 # options = ChromeOptions()
 # options.AddArgument("--user-data-dir=C:\\Users\\Codehimn\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
@@ -18,12 +22,12 @@ browser = webdriver.Chrome(chromedriver, chrome_options=options)
 # browser.find_element_by_xpath('//*[@id="Passwd"]').send_keys('iluminadopalma')
 # browser.find_element_by_xpath('//*[@id="signIn"]').click()
 
-sleep(5)
+sleep(15)
 i=0
-while i < 100:
+while i < 120:
 	sleep(0.5)
 	i=+1
-	if 'done' in  browser.find_element_by_xpath('//*[@id="innerstatus"]/span[2]/span').text : i = 100
+	if 'done' in  browser.find_element_by_xpath('//*[@id="innerstatus"]/span[2]/span').text : i = 900
 print('-done-')
 
 browser.execute_script('window.plugin.portalslist.displayPL()')
@@ -41,5 +45,4 @@ browser.close()
 
 
 
-
-# elem.send_keys('seleniumhq' + Keys.RETURN)
+read_portal_file()
